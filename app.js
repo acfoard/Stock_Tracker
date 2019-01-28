@@ -35,17 +35,30 @@ renderButtons();
 const addButton = function() {
     event.preventDefault();
     let newStock = $('#newStock').val().trim().toUpperCase();
-    console.log(newStock);
-    let message = `${newStock} is not a valid Stock Symbol`;
-    for (let i=0; i<verifyList[i]; i++) {
-        if (newStock === verifyList[i]) {
-            stocks.push(newStock);
-            message = `${newStock} has been added`;
-        };
-    };
+    if (verifyList.includes(newStock)) {
+        stocks.push(newStock);
+        renderButtons();
+    } else {
+        alert(`${newStock} is not a valid Stock Symbol`);
+    }
     $('#newStock').val('');
-    renderButtons();
-    alert(message);
 };
 
 $('#newStockBtn').on('click', addButton);
+
+//Return stock info
+const returnStock = function() {
+    const quoteSymbol = $(this).attr('data-name');
+    const quoteURL = `${endPoint}/stock/${quoteSymbol}/quote`;
+    $.ajax({
+        url: quoteURL,
+        method: 'GET'
+    }).then(function(response) {
+        const stockDiv = $('<div>').addClass("row");
+        const companyName = response.quote.companyName;
+        const nameDiv = $(`<div class="col-3">`).html(`<h2>${companyName}</h2>`);
+        const stockPrice = $('<h1>').text(response.quote.latestPrice);
+        nameDiv.append(stockPrice);
+        stockDiv.append(nameDiv);
+    });
+};
