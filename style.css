@@ -2,3 +2,20 @@ img {
     width: 80%;
     margin: 10px;
 }
+
+.container {
+    background-color: #efeeee;
+}
+
+h1 {
+    background-color: #e9ccb1;
+}
+
+.carousel-item, .logo, .info {
+    background-color: #e8e8d9;
+}
+
+.stockRow {
+    border: solid 2px #c4bdac;
+    margin: 5px 0px;
+}

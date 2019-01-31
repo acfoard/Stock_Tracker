@@ -1,7 +1,7 @@
 const endPoint = 'https://api.iextrading.com/1.0';
 
 //Initialize stocks
-const stocks = ['MKL', 'AHL', 'AXS', 'NFLX'];
+const stocks = ['AAPL', 'UPS', 'FDX', 'NFLX'];
 
 //Create validation list
 const verifyURL = `${endPoint}/ref-data/symbols`;
@@ -55,7 +55,7 @@ const returnStock = function () {
         method: 'GET'
     }).then(function (response) {
         // let newsSlides = $('<div>');
-        const newRow = $(`<div class='row'>
+        const newRow = $(`<div class='row stockRow'>
             <div class='col-2 logo'>
                 <img src=${response.logo.url}>
             </div>
@@ -64,7 +64,7 @@ const returnStock = function () {
                 <h3>$${response.quote.latestPrice}</h3>
             </div>
             <div class='col-7'>
-                <div class="carousel slide" data-ride="carousel" data-interval="4000">
+                <div class="carousel slide" data-ride="carousel" data-interval="6500">
                     <div class="carousel-inner" id="newsContent">
                         <div class='carousel-item active'>
                             <p><b>${response.news[0].headline}</b></p>
