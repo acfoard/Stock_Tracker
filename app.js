@@ -14,7 +14,6 @@ $.ajax({
         let symbol = verifyResponse[i].symbol;
         verifyList.push(symbol);
     };
-    console.log(verifyList);
 });
 
 //Render buttons
@@ -47,18 +46,45 @@ const addButton = function() {
 $('#newStockBtn').on('click', addButton);
 
 //Return stock info
+let counter = 0;
 const returnStock = function() {
     const quoteSymbol = $(this).attr('data-name');
-    const quoteURL = `${endPoint}/stock/${quoteSymbol}/quote`;
+    const quoteURL = `${endPoint}/stock/${quoteSymbol}/batch?types=quote,logo,news&range=1m&last=10`;
     $.ajax({
         url: quoteURL,
         method: 'GET'
     }).then(function(response) {
-        const stockDiv = $('<div>').addClass("row");
-        const companyName = response.quote.companyName;
-        const nameDiv = $(`<div class="col-3">`).html(`<h2>${companyName}</h2>`);
-        const stockPrice = $('<h1>').text(response.quote.latestPrice);
-        nameDiv.append(stockPrice);
-        stockDiv.append(nameDiv);
+        let newsSlides;
+        for (i=1; i<response.length; i++) {
+            let slide = $(`<div class='carousel-item'>
+            <p><b>${response.news[i].headline}</b></p>
+            <p>${response.news[i].summary}</p>
+            </div>`);
+            newsSlides.append(slide);
+        };
+        const newRow = $(`<div class='row'>
+            <div class='col-2 logo'>
+                <img src=${response.logo.url}>
+            </div>
+            <div class='col-3 info' id='${quoteSymbol}${counter}'>
+                <h2>${response.quote.companyName}</h2>
+                <h3>$${response.quote.latestPrice}</h3>
+            </div>
+            <div class='col-7'>
+                <div class='carousel slide' data-ride='carousel' data-interval='4000'>
+                    <div class='carousel-inner'>
+                        <div class='carousel-item active'>
+                            <p><b>${response.news[0].headline}</b></p>
+                            <p>${response.news[0].summary}</p>
+                        </div>
+                        ${newsSlides}
+                    </div>
+                </div>
+            </div>
+        </div>`);
+        counter++;
+        $('.cardList').prepend(newRow);
     });
 };
+
+$('#button-list').on('click', '.btn', returnStock);
